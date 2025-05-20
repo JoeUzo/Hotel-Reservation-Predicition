@@ -7,3 +7,4 @@ venv/
 __pycache__/
 *.log
 test*.py
+notebook/*.pkl
