@@ -8,7 +8,7 @@ from config.paths_config import *
 from utils.common_fuctions import read_yaml
 import sys
 
-logger = get_logger(__name__)
+logger = get_logger("Data-ingestion")
 
 class DataIngestion:
     def __init__(self, config):
