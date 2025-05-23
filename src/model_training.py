@@ -11,9 +11,11 @@ from src.custom_exception import CustomException
 from config.paths_config import *
 from config.model_params import *
 from utils.common_fuctions import read_yaml, load_data
+import mlflow
+import mlflow.sklearn
 
 
-logger = get_logger('Model-Training')
+logger = get_logger(__name__)
 
 
 class ModelTraining:
@@ -62,7 +64,7 @@ class ModelTraining:
                 random_state=self.random_search_params['random_state'],
                 n_jobs=self.random_search_params['n_jobs'],
                 verbose=self.random_search_params['verbose'],
-                scoring=self.random_search_params['scorring']
+                scoring=self.random_search_params['scoring']
             )
 
             random_search.fit(X_train, y_train)
@@ -112,15 +114,35 @@ class ModelTraining:
         
     def run(self):
         try: 
-           logger.info("Starting model training process")
-           
-           X_train, y_train, X_test, y_test = self.load_and_split_data()
-           best_lgbm_model = self.train_lgbm(X_train, y_train)
-           metrics = self.evaluate_model(best_lgbm_model, X_test, y_test)
-           self.save_model(best_lgbm_model)
+            logger.info("Starting model training process")
+            with mlflow.start_run():
+                logger.info("Starting model training process")
+                
 
-           logger.info("Model training completed")
+                logger.info("Logging the training and testing dataset to MLFLOW")
+                mlflow.log_artifact(self.train_path, artifact_path='datasets')
+                mlflow.log_artifact(self.test_path, artifact_path='datasets')
+
+                X_train, y_train, X_test, y_test = self.load_and_split_data()
+                best_lgbm_model = self.train_lgbm(X_train, y_train)
+                metrics = self.evaluate_model(best_lgbm_model, X_test, y_test)
+                self.save_model(best_lgbm_model)
+
+                logger.info("Logging model to MLFLOW")
+                mlflow.log_artifact(self.model_output_path)
+
+                logger.info("Logging model parameters and metrics to MLFLOW")
+                mlflow.log_params(best_lgbm_model.get_params())
+                mlflow.log_metrics(metrics)
+
+                logger.info("Model training completed")
 
         except Exception as e:
             logger.error(f"Error during model training: {e}")
             raise CustomException("Failed to train model", e)
+        
+
+if __name__ == "__main__":
+    logger.info("Starting model training process")
+    model_trainer = ModelTraining(PROCESSED_TRAIN_DATA_PATH, PROCESSED_TEST_DATA_PATH, MODEL_OUTPUT_PATH)
+    model_trainer.run()

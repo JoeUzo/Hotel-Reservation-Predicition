@@ -8,7 +8,7 @@ from config.paths_config import *
 from utils.common_fuctions import read_yaml
 import sys
 
-logger = get_logger("Data-ingestion")
+logger = get_logger(__name__)
 
 class DataIngestion:
     def __init__(self, config):
@@ -40,7 +40,7 @@ class DataIngestion:
             logger.info("Splitting data into train and test sets")
 
             df = pd.read_csv(RAW_FILE_PATH)
-            train_data, test_data = train_test_split(df, test_size=1-self.train_test_ratio, random_state=99)
+            train_data, test_data = train_test_split(df, test_size=1-self.train_test_ratio, random_state=97)
 
             train_data.to_csv(TRAIN_FILE_PATH, index=False)
             test_data.to_csv(TEST_FILE_PATH, index=False)

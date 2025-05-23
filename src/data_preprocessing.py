@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import SMOTE
 
-logger = get_logger("Data-Preprocessing")
+logger = get_logger(__name__)
 
 class DataProcessor:
 
