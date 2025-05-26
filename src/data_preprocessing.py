@@ -26,7 +26,7 @@ class DataProcessor:
         try:
             logger.info("Starting Data Processing Step")
 
-            logger.info("Dropping 'Booking_ID Column' and duplicates")
+            logger.info("Dropping 'Booking_ID' Column and duplicates")
             df.drop(columns=['Booking_ID'], inplace=True)
             df.drop_duplicates(inplace=True)
 
