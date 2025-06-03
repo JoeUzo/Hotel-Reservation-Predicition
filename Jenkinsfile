@@ -9,7 +9,7 @@ pipeline {
         stage('Cloning GitHub Repo to Jenkins') {
             steps {
                 echo 'Clone GitHub repository to Jenkins...'
-                checkout scm
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JoeUzo/Hotel-Reservation-Predicition.git']])
             }
         }
 
