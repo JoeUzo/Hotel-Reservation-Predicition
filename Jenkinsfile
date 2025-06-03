@@ -6,24 +6,26 @@ pipeline {
     }
 
     stages {
-        stage('Cloning GitHub Repo to Jenkins') {
-            steps {
-                echo 'Clone GitHub repository to Jenkins...'
-                script {
+        stage('Cloning Github repo to Jenkins'){
+            steps{
+                script{
+                    echo 'Cloning Github repo to Jenkins............'
                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github Cred', url: 'https://github.com/JoeUzo/Hotel-Reservation-Predicition.git']])
                 }
             }
         }
 
-        stage('Setting up Python Virtual Environment and Installing Dependencies') {
-            steps {
-                echo 'Clone GitHub repository to Jenkins...'
-                sh '''
-                python -m venv ${VENV_DIR}
-                . ${VENV_DIR}/bin/activate
-                pip install --upgrade pip
-                pip install -e
-                '''
+        stage('Setting up our Virtual Environment and Installing dependancies'){
+            steps{
+                script{
+                    echo 'Setting up our Virtual Environment and Installing dependancies............'
+                    sh '''
+                    python -m venv ${VENV_DIR}
+                    . ${VENV_DIR}/bin/activate
+                    pip install --upgrade pip
+                    pip install -e .
+                    '''
+                }
             }
         }
     }
