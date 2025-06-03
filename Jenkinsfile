@@ -9,7 +9,9 @@ pipeline {
         stage('Cloning GitHub Repo to Jenkins') {
             steps {
                 echo 'Clone GitHub repository to Jenkins...'
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JoeUzo/Hotel-Reservation-Predicition.git']])
+                script {
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github Cred', url: 'https://github.com/JoeUzo/Hotel-Reservation-Predicition.git']])
+                }
             }
         }
 
@@ -20,7 +22,7 @@ pipeline {
                 python -m venv ${VENV_DIR}
                 . ${VENV_DIR}/bin/activate
                 pip install --upgrade pip
-                pip install -e .
+                pip install -e
                 '''
             }
         }
